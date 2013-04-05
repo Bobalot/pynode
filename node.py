@@ -17,7 +17,7 @@ import random
 import cStringIO
 import hashlib
 
-MY_VERSION = 60002
+MY_VERSION = 312
 MY_SUBVERSION = "/pynode:0.0.1/"
 
 NETWORKS = [
@@ -670,8 +670,8 @@ class NodeConn(asyncore.dispatcher):
 		self.create_socket(socket.AF_INET, socket.SOCK_STREAM)
 		self.sendbuf = ""
 		self.recvbuf = ""
-		self.ver_send = 60002
-		self.ver_recv = 60002
+		self.ver_send = 209
+		self.ver_recv = 209
 		self.last_sent = 0
 		self.state = "connecting"
 
