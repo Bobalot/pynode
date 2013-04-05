@@ -23,7 +23,7 @@ MY_SUBVERSION = "/pynode:0.0.1/"
 
 # Default Settings if no configuration file is given
 settings = {
-	"host": "173.242.112.53",
+	"host": "109.228.129.57",
 	"port": 8333,
 	"debug": False,
 	"network": "mainnet"
