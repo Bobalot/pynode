@@ -20,20 +20,17 @@ import hashlib
 MY_VERSION = 312
 MY_SUBVERSION = "/pynode:0.0.1/"
 
-NETWORKS = [
-	# "\xf9\xbe\xb4\xd9", # mainnet
-	"\x0b\x11\x09\x07",
-
-	# "\xfa\xbf\xb5\xda", # testnet3
-]
+NETWORKS = {
+	"mainnet": "\xf9\xbe\xb4\xd9", # mainnet
+	"testnet3": "\x0b\x11\x09\x07", # testnet3
+}
 
 # Default Settings if no configuration file is given
 settings = {
-	# "host": "173.242.112.53",
-	# "port": 8333,
-	"host": "127.0.0.1",
-	"port": 18333,
-	"debug": True
+	"host": "173.242.112.53",
+	"port": 8333,
+	"debug": False,
+	"network": "mainnet"
 }
 
 def new_block_event(block):
@@ -734,7 +731,7 @@ class NodeConn(asyncore.dispatcher):
 		while True:
 			if len(self.recvbuf) < 4:
 				return
-			if self.recvbuf[:4] not in NETWORKS:
+			if self.recvbuf[:4] != NETWORKS[settings['network']]:
 				raise ValueError("got garbage %s" % repr(self.recvbuf))
 			if self.ver_recv < 209:
 				if len(self.recvbuf) < 4 + 12 + 4:
@@ -773,9 +770,7 @@ class NodeConn(asyncore.dispatcher):
 		show_debug_msg("Send %s" % repr(message))
 		command = message.command
 		data = message.serialize()
-		# tmsg = "\xf9\xbe\xb4\xd9"
-		# tmsg = "\xfa\xbf\xb5\xda"
-		tmsg = "\x0b\x11\x09\x07"
+		tmsg = NETWORKS[settings['network']]
 		tmsg += command
 		tmsg += "\x00" * (12 - len(command))
 		tmsg += struct.pack("<I", len(data))
@@ -822,6 +817,7 @@ if __name__ == '__main__':
 				continue
 			settings[m.group(1)] = m.group(2)
 		f.close()
+
 	settings['port'] = int(settings['port'])
 	c = NodeConn(settings['host'], settings['port'])
 	asyncore.loop()
