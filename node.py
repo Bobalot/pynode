@@ -17,19 +17,23 @@ import random
 import cStringIO
 import hashlib
 
-MY_VERSION = 312
-MY_SUBVERSION = ".4"
+MY_VERSION = 60002
+MY_SUBVERSION = "/pynode:0.0.1/"
 
 NETWORKS = [
-	"\xf9\xbe\xb4\xd9", # mainnet
-	"\xfa\xbf\xb5\xda", # testnet3
+	# "\xf9\xbe\xb4\xd9", # mainnet
+	"\x0b\x11\x09\x07",
+
+	# "\xfa\xbf\xb5\xda", # testnet3
 ]
 
 # Default Settings if no configuration file is given
 settings = {
-	"host": "173.242.112.53",
-	"port": 8333,
-	"debug": False
+	# "host": "173.242.112.53",
+	# "port": 8333,
+	"host": "127.0.0.1",
+	"port": 18333,
+	"debug": True
 }
 
 def new_block_event(block):
@@ -666,8 +670,8 @@ class NodeConn(asyncore.dispatcher):
 		self.create_socket(socket.AF_INET, socket.SOCK_STREAM)
 		self.sendbuf = ""
 		self.recvbuf = ""
-		self.ver_send = 209
-		self.ver_recv = 209
+		self.ver_send = 60002
+		self.ver_recv = 60002
 		self.last_sent = 0
 		self.state = "connecting"
 
@@ -769,7 +773,9 @@ class NodeConn(asyncore.dispatcher):
 		show_debug_msg("Send %s" % repr(message))
 		command = message.command
 		data = message.serialize()
-		tmsg = "\xf9\xbe\xb4\xd9"
+		# tmsg = "\xf9\xbe\xb4\xd9"
+		# tmsg = "\xfa\xbf\xb5\xda"
+		tmsg = "\x0b\x11\x09\x07"
 		tmsg += command
 		tmsg += "\x00" * (12 - len(command))
 		tmsg += struct.pack("<I", len(data))
